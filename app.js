@@ -11,7 +11,7 @@ import cors from "cors"
 
 
 
-const app = express()
+export const app = express()
 connectDb();
 
 // using middlewares
@@ -35,6 +35,4 @@ app.use(errorHandler)
 
 
 
-app.listen(3000 , () => {
-    console.log("listening at the port 3000");
-})
+
