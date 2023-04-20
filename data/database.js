@@ -8,5 +8,5 @@ config({
 export const connectDb = () => {
     mongoose.connect(process.env.DB_URI,{
     dbName : "backendApi",
-}).then(() => {console.log("In then")}).catch(() => {console.log("In catch")});
+}).then((c) => {console.log(c.connection.host)}).catch(() => {console.log("In catch")});
 }
