@@ -20,7 +20,8 @@ app.use(express.urlencoded({extended : true}));
 app.use(express.json());
 app.use(cors({
     credentials: true,
-    origin: 'http://localhost:3000' // replace with your frontend URL
+    origin: [process.env.FRONTEND_URL],
+    methods : ["GET", "POST", "PUT" , "DELETE"]
   }));
 // using routes
 app.use("/api/v1/users", userRouter);
