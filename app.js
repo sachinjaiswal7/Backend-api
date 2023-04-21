@@ -11,15 +11,17 @@ import cors from "cors"
 
 
 
-export const app = express()
+export const app = express
 connectDb();
 
 // using middlewares
 app.use(cookieParser());
 app.use(express.urlencoded({extended : true}));
 app.use(express.json());
-app.use(cors());
-
+app.use(cors({
+    credentials: true,
+    origin: 'http://localhost:3000/' // replace with your frontend URL
+  }));
 // using routes
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/task",taskRouter)
