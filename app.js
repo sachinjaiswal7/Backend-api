@@ -11,7 +11,7 @@ import cors from "cors"
 
 
 
-export const app = express
+export const app = express();
 connectDb();
 
 // using middlewares
