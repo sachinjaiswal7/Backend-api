@@ -5,6 +5,7 @@ import { connectDb } from "./data/database.js";
 import cookieParser from "cookie-parser";
 import { errorHandler } from "./middlewares/error.js";
 import cors from "cors"
+import ejs from "ejs"
 
 
 
@@ -31,6 +32,9 @@ app.use("/api/v1/task",taskRouter)
 
 app.get("/",(req, res) => {
     res.send("Nicely working");
+})
+app.get("/api/v1/users/new",(req,res) => {
+  res.render("register.ejs");
 })
 app.use(errorHandler)
 

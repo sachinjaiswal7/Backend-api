@@ -1,7 +1,6 @@
 import { user } from "../models/users.js";
 import bcrypt from "bcrypt";
 import { config } from "dotenv";
-import { sendCookie } from "../utils/features.js";
 import { ErrorHandlder } from "../middlewares/error.js";
 
 config({
@@ -24,7 +23,11 @@ export const register = async (req, res,next) => {
         const createdUser = await user.create({name , email , password : hashedPassword})
         const message = "Registered Successfully";
         const statusCode = 201;
-        sendCookie(res,createdUser._id,message , statusCode);
+        res.status(statusCode).json({
+            success : true,
+            message,
+            _id : createdUser._id
+        })
    }
    catch(error){
     next(error);
@@ -42,7 +45,12 @@ export const login = async (req, res,next) => {
     const isMatched = await bcrypt.compare(password , findUser.password);
 
     if(findUser && (isMatched)){
-        sendCookie(res,findUser._id,"Login Successfully",200);
+        res.status(200).json({
+            success : true,
+            message : "Login successful",
+            _id : findUser._id,
+            name : findUser.name
+        })
     }
     else{
         return next(new ErrorHandlder("Incorrect Email or Password",400));
@@ -57,10 +65,12 @@ export const login = async (req, res,next) => {
 // with this api we get the data of the user who is currently logged in on the page 
 export const getMyProfile = async (req, res,next) => {
    try{
-    res.status(200).json({
-        success : true,
-        user : req.user
-    });
+        const {id} = req.query
+        const curUser = await user.findById(id);
+        res.json({
+            success : true,
+            data : curUser
+        })
    }
    catch(error){
     next(error);
@@ -72,15 +82,14 @@ export const getMyProfile = async (req, res,next) => {
 // api to help the user to logout of the page 
 export const logout = async (req,res,next) => {
   try{
-        res.cookie("token",null ,{
-            expires : new Date(Date.now()),
-            httpOnly : false,
-            sameSite : ((process.env.NODE_ENV == "Development") ? "lax" : "none" ),
-            secure : ((process.env.NODE_ENV == "Development") ? false : true), 
-        }).json({
-            success : true,
-            message : "Logged Out Successfully"
-        })
+       const {id} = req.body;
+       console.log(id);
+       const curUser = await user.findById(id);
+       res.json({
+        success : true,
+        user : curUser
+       })
+        
   }
   catch(error){
     next(error);

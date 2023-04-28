@@ -4,11 +4,11 @@ import { task } from "../models/task.js";
 
 export const createTask = async (req, res,next) => {
     try{
-        const {title , description}  = req.body;
+        const {title , description,_id}  = req.body;
         const curTask = await task.create({
             title,
             description,
-            user : req.user
+            user : _id
         })
         res.status(201).json({
             success : true,
@@ -21,9 +21,9 @@ export const createTask = async (req, res,next) => {
 }
 
 export const allTask = async (req,res,next) => {
-   try{
-        const {id} = req.user;
-        const tasks = await task.find({user : id});
+    try{
+        const {data} = req.query;
+        const tasks = await task.find({user : data});
 
         res.status(200).json({
             success : true,
